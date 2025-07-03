@@ -3,12 +3,28 @@ name: CI
 on:
   push:
     branches:
-      - 'master'
-      - 'release-*'
+      # We use skyscanner-internal/master as the base branch for integration
+      # This branch contains our CI changes and is not meant for direct contributions.
+      # Our internal development is to be merged into here.
+      # The changes that are ready for contribution should be cherry-picked to skyscanner-contrib/master.
+      - skyscanner-internal/master
+      # Branches to be used for development and testing. They should be based on skyscanner-internal/master.
+      - skyscanner-internal/develop/**
   pull_request:
     branches:
-      - 'master'
-      - 'release-*'
+      - skyscanner-internal/master
+      # Cleaned up, ready for contribution PRs are to be cherry-picked here
+      - skyscanner-contrib/master
+
+# on:
+#   push:
+#     branches:
+#       - 'master'
+#       - 'release-*'
+#   pull_request:
+#     branches:
+#       - 'master'
+#       - 'release-*'
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -24,7 +40,7 @@ jobs:
         with:
           version:  v2.1.6
           args: --verbose
-      - uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5.4.2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }} #required
-          files: ./coverage.out
+      # - uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5.4.2
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }} #required
+      #     files: ./coverage.out
